@@ -26,6 +26,7 @@ const emptyCharacter: CharacterItem = {
 export class CharacterService {
   private http = inject(HttpClient);
   private charactersPage = signal(1); // Comenzamos en la página 1
+  private pageSize = signal(20); // Tamaño de página por defecto de la API
   charactersLoading = signal(false);
   characters = signal<CharacterItem[]>([]);
   totalPages = signal(0);
@@ -35,11 +36,16 @@ export class CharacterService {
   }
   charactersArray = computed(() => this.characters());
   currentPage = computed(() => this.charactersPage());
+  currentPageSize = computed(() => this.pageSize());
   totalPagesValue = computed(() => this.totalPages());
   totalCharactersValue = computed(() => this.totalCharacters());
-  getCharacters(page: number = 1): void {
+  getCharacters(page: number = 1, size: number = 20): void {
     this.charactersLoading.set(true);
     this.charactersPage.set(page);
+    this.pageSize.set(size);
+    // La API de Rick y Morty siempre devuelve 20 elementos por página,
+    // por lo que no podemos modificar el tamaño de página en la solicitud.
+    // En su lugar, obtenemos la página y luego filtramos los resultados.
     this.http.get<CharacterResponse>(`${API_URL}/character?page=${page}`).pipe(
       tap(resp => {
         if (resp.info) {
@@ -52,27 +58,37 @@ export class CharacterService {
         return of({ results: [], info: { count: 0, pages: 0, next: null, prev: null } } as CharacterResponse);
       })
     ).subscribe((resp) => {
-      const items = CharacterMapper.mapCharacterItems(resp.results);
+      let items = CharacterMapper.mapCharacterItems(resp.results);
+      // Aplicamos el tamaño de página localmente si es diferente de 20
+      if (size !== 20) {
+        items = items.slice(0, size);
+      }
       this.characters.set(items);
       this.charactersLoading.set(false);
-      console.log({items, pageInfo: resp.info});
+      console.log({items, pageInfo: resp.info, pageSize: size});
     });
   }
   nextPage(): void {
     const currentPage = this.charactersPage();
     if (currentPage < this.totalPages()) {
-      this.getCharacters(currentPage + 1);
+      this.getCharacters(currentPage + 1, this.pageSize());
     }
   }
   prevPage(): void {
     const currentPage = this.charactersPage();
     if (currentPage > 1) {
-      this.getCharacters(currentPage - 1);
+      this.getCharacters(currentPage - 1, this.pageSize());
     }
   }
-  goToPage(page: number): void {
+  goToPage(page: number, size: number = this.pageSize()): void {
     if (page >= 1 && page <= this.totalPages()) {
-      this.getCharacters(page);
+      this.getCharacters(page, size);
+    }
+  }
+  setPageSize(size: number): void {
+    if (size > 0) {
+      this.pageSize.set(size);
+      this.getCharacters(this.charactersPage(), size);
     }
   }
   getEpisode(baseUrl: string): Observable<Episode> {
@@ -112,10 +128,15 @@ export class CharacterService {
         return of({ results: [], info: { count: 0, pages: 0, next: null, prev: null } } as CharacterResponse);
       })
     ).subscribe((resp) => {
-      const items = CharacterMapper.mapCharacterItems(resp.results);
+      let items = CharacterMapper.mapCharacterItems(resp.results);
+      // Aplicamos el tamaño de página
+      const size = this.pageSize();
+      if (size !== 20) {
+        items = items.slice(0, size);
+      }
       this.characters.set(items);
       this.charactersLoading.set(false);
-      console.log({items})
+      console.log({items});
     });
   }
 }

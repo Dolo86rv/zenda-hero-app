@@ -57,10 +57,10 @@
 
       <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                       [length]="totalItems"
-                      [pageSize]="20"
+                      [pageSize]="currentPageSize"
                       (page)="handlePageEvent($event)"
                       showFirstLastButtons
-                      aria-label="Select page of periodic elements">
+                      aria-label="Select page of characters">
       </mat-paginator>
 
     </div>
