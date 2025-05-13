@@ -1,4 +1,4 @@
-import { Injectable, inject, signal, computed } from '@angular/core';
+import { Injectable, inject, signal, computed, effect } from '@angular/core';
 import { CharacterService } from './character.service';
 import { HttpClient } from '@angular/common/http';
 // Interfaces simples para los conteos
@@ -19,6 +19,7 @@ interface CharacterFilter {
   gender?: string;
 }
 interface GraphQLVariables {
+  page?: number;
   filter: CharacterFilter;
 }
 interface GraphQLResponse {
@@ -26,6 +27,7 @@ interface GraphQLResponse {
     characters?: {
       info?: {
         count: number;
+        pages: number;
       };
       results?: Array<{
         species?: string;
@@ -50,17 +52,69 @@ export class TabStatisticsService {
   totalSpecies = computed(() => this.speciesCount().length);
   totalTypes = computed(() => this.typeCount().length);
   isLoading = computed(() => this.loading());
+  // Signal para los personajes de la página actual
+  private currentCharacters = signal<any[]>([]);
   constructor() {
-    // Carga inicial de datos
+    // Efecto para actualizar las estadísticas cuando cambia la página o filtros
+    effect(() => {
+      // Observamos los cambios en la página, tamaño de página, y filtros
+      const characters = this.characterService.charactersArray();
+      const currentPage = this.characterService.currentPage();
+      const pageSize = this.characterService.currentPageSize();
+      const nameTerm = this.characterService.nameTerm();
+      const statusTerm = this.characterService.statusTerm();
+      // Actualizamos los personajes de la página actual
+      this.currentCharacters.set(characters);
+      // Y calculamos estadísticas con ellos
+      this.calculateStatistics();
+    });
+    // Carga inicial para asegurar que haya datos
     this.fetchStatistics();
   }
+  calculateStatistics() {
+    // Si no hay personajes, no hacemos nada
+    const characters = this.currentCharacters();
+    if (!characters || characters.length === 0) {
+      return;
+    }
+    // Calcular estadísticas de especies
+    const speciesMap = new Map<string, number>();
+    characters.forEach(character => {
+      const species = character.species || 'Unknown';
+      speciesMap.set(species, (speciesMap.get(species) || 0) + 1);
+    });
+    // Calcular estadísticas de tipos
+    const typeMap = new Map<string, number>();
+    characters.forEach(character => {
+      const type = character.type || 'Unknown';
+      typeMap.set(type, (typeMap.get(type) || 0) + 1);
+    });
+    // Actualizar los datos
+    this.speciesCountData.set(
+      Array.from(speciesMap).map(([species, count]) => ({ species, count }))
+    );
+    this.typeCountData.set(
+      Array.from(typeMap).map(([type, count]) => ({ type, count }))
+    );
+  }
   fetchStatistics() {
+    // Si ya tenemos personajes en el servicio principal, usamos esos
+    const characters = this.characterService.charactersArray();
+    if (characters && characters.length > 0) {
+      this.currentCharacters.set(characters);
+      this.calculateStatistics();
+      return;
+    }
+    // Si no tenemos personajes, hacemos fetch
     this.loading.set(true);
-    // Obtener los términos de búsqueda del servicio existente
+    // Obtener los términos de búsqueda y paginación del servicio existente
     const nameTerm = this.characterService.nameTerm();
     const statusTerm = this.characterService.statusTerm();
+    const currentPage = this.characterService.currentPage();
+    const pageSize = this.characterService.currentPageSize();
     // Construir las variables para la consulta GraphQL
     const variables: GraphQLVariables = {
+      page: currentPage,
       filter: {}
     };
     if (nameTerm) {
@@ -69,16 +123,21 @@ export class TabStatisticsService {
     if (statusTerm) {
       variables.filter.status = statusTerm;
     }
-    // Consulta GraphQL para obtener todos los personajes (sin paginación para estadísticas completas)
+    // Consulta GraphQL
     const query = `
-      query GetCharactersStatistics($filter: FilterCharacter) {
-        characters(filter: $filter) {
+      query GetCharactersStatistics($page: Int, $filter: FilterCharacter) {
+        characters(page: $page, filter: $filter) {
           info {
             count
+            pages
           }
           results {
+            id
+            name
             species
             type
+            status
+            gender
           }
         }
       }
@@ -89,26 +148,14 @@ export class TabStatisticsService {
       variables
     }).subscribe({
       next: (response: GraphQLResponse) => {
-        const characters = response?.data?.characters?.results || [];
-        // Calcular estadísticas de especies
-        const speciesMap = new Map<string, number>();
-        characters.forEach(char => {
-          const species = char.species || 'Unknown';
-          speciesMap.set(species, (speciesMap.get(species) || 0) + 1);
-        });
-        // Calcular estadísticas de tipos
-        const typeMap = new Map<string, number>();
-        characters.forEach(char => {
-          const type = char.type || 'Unknown';
-          typeMap.set(type, (typeMap.get(type) || 0) + 1);
-        });
-        // Actualizar los datos
-        this.speciesCountData.set(
-          Array.from(speciesMap).map(([species, count]) => ({ species, count }))
-        );
-        this.typeCountData.set(
-          Array.from(typeMap).map(([type, count]) => ({ type, count }))
-        );
+        const allCharacters = response?.data?.characters?.results || [];
+        // Aplicar el tamaño de página actual (igual que en la UI)
+        // Si la API devuelve 20 pero la UI muestra 5, tomamos solo los primeros 5
+        const visibleCharacters = allCharacters.slice(0, pageSize);
+        // Actualizar los personajes actuales
+        this.currentCharacters.set(visibleCharacters);
+        // Calcular estadísticas con los personajes visibles
+        this.calculateStatistics();
         this.loading.set(false);
       },
       error: (error) => {
@@ -119,7 +166,7 @@ export class TabStatisticsService {
       }
     });
   }
-  // Método para actualizar manualmente las estadísticas
+  // Método para actualizar manualmente las estadísticas si fuera necesario
   refresh() {
     this.fetchStatistics();
   }
