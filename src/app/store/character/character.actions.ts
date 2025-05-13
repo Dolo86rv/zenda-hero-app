@@ -16,3 +16,8 @@ export const removeFavorite = createAction(
   '[Character] Remove Favorite',
   props<{ id: number }>()
 );
+
+export const setCurrentCharacter = createAction(
+  '[Character] Set Current Character',
+  props<{ character: Character }>()
+);

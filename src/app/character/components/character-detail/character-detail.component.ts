@@ -1,5 +1,5 @@
 import { Store } from '@ngrx/store';
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal, computed } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -14,7 +14,9 @@ import { Character, CharacterDetails } from '@character/models/character-respons
 
 
 import { LocationDetail } from '@character/models/location.model';
-import { addFavorite } from 'src/app/store/character/character.actions';
+import { addFavorite, removeFavorite } from 'src/app/store/character/character.actions';
+import { Observable, take } from 'rxjs';
+import { selectFavorites } from 'src/app/store/character/character.selectors';
 
 
 @Component({
@@ -39,17 +41,46 @@ export class CharacterDetailComponent {
   characterLocation = signal<LocationDetail | null>(null);
   characterEpisode = signal<Episode | null>(null);
   characterOrigin = signal<LocationDetail | null>(null);
+  favorite$: Observable<Character[] | null>;
+  listFavorite = signal<Character[]>([]);
 
-  constructor(private store: Store) {}
+  isFavorite = computed(() => {
+    if (this.character()?.character) {
+      return this.listFavorite().some((item) => item.id === this.character()?.character?.id) || false;
+    }
+    return false;
+  })
+
+  constructor(private store: Store) {
+    this.favorite$ = this.store.select(selectFavorites)
+
+    this.favorite$.subscribe((data) => {
+      this.listFavorite.set(data || []);
+    });
+  }
+
+  toggledFavorites(character: Character): void {
+    this.favorite$.pipe(take(1)).subscribe((data) => {
+      const isFavorite = data?.some((item) => item.id === character.id);
+
+      if (isFavorite) {
+        this.removeFavorite(character);
+      } else {
+        this.addToFavorites(character);
+      }
+    });
+  }
 
   addToFavorites(character: Character ) {
     this.store.dispatch(addFavorite({ character }));
+
   }
 
-  /*removeFavorite(character: Character): void {
-    const { id: number} = character;
-    this.store.dispatch(this.removeFavorite({ id }));
-  }*/
+  removeFavorite(character: Character): void {
+    const id = character.id;
+    this.store.dispatch(removeFavorite({ id }));
+
+  }
 
 
 
