@@ -37,8 +37,8 @@ interface Status {
 export class CharacterSearchComponent {
   characterService = inject(CharacterService);
 
-  nameTerm = signal<string>('');
-  statusTerm = signal<string>('');
+  nameTerm = this.characterService.nameTerm; ;
+  statusTerm = this.characterService.statusTerm;
   query = computed(() => {
     if (!this.nameTerm() && !this.statusTerm()) return '';
     if (this.nameTerm() && !this.statusTerm()) return `?name=${this.nameTerm()}`;

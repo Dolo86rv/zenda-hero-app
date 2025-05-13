@@ -31,6 +31,10 @@ export class CharacterService {
   characters = signal<CharacterItem[]>([]);
   totalPages = signal(0);
   totalCharacters = signal(0);
+
+  nameTerm = signal<string>('');
+  statusTerm = signal<string>('');
+
   constructor() {
     this.getCharacters();
   }

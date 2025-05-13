@@ -10,10 +10,18 @@ import { DatePipe } from '@angular/common';
 import { CharacterSearchComponent } from "../character-search/character-search.component";
 import { Store } from '@ngrx/store';
 import { setCurrentCharacter } from 'src/app/store/character/character.actions';
+import { HighlightDirective } from '@character/directives/highlight.directive';
 @Component({
   selector: 'character-table',
-  imports: [MatTableModule, MatPaginatorModule, CharacterDetailComponent, DatePipe, CharacterSearchComponent],
+  imports: [MatTableModule, MatPaginatorModule, CharacterDetailComponent, DatePipe, CharacterSearchComponent, HighlightDirective],
   templateUrl: './character-table.component.html',
+  styles: `
+    /* Style search highlight */
+    ::ng-deep .search-highlight {
+        background-color: #fff9c4;
+        font-weight: bold;
+      }
+  `
 })
 export class CharacterTableComponent implements AfterViewInit, OnInit {
   characterService = inject(CharacterService);
@@ -30,6 +38,9 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
     'gender',
     'created'
   ];
+
+  nameTerm = this.characterService.nameTerm; ;
+  
   constructor(private store: Store) {
     // Usar effect para manejar cambios en el total de personajes
     effect(() => {

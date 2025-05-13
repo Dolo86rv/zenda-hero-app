@@ -12,7 +12,9 @@
           <th mat-header-cell *matHeaderCellDef> Name </th>
           <td mat-cell *matCellDef="let element">
             <button class="text-blue-500 hover:underline" (click)="selectCharacter(element)">
-              {{element.name}}
+              <span [appHighlight]="nameTerm()" highlightClass="search-highlight">
+                {{element.name}}
+              </span>
             </button>
           </td>
         </ng-container>
