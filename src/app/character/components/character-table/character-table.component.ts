@@ -40,7 +40,7 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
   ];
 
   nameTerm = this.characterService.nameTerm; ;
-  
+
   constructor(private store: Store) {
     // Usar effect para manejar cambios en el total de personajes
     effect(() => {
@@ -68,7 +68,6 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
     // Inicialización ya manejada por los effects
   }
   handlePageEvent(event: PageEvent): void {
-    console.log('PageEvent:', event);
     const page = event.pageIndex + 1;
     const pageSize = event.pageSize;
     // Si cambió el tamaño de la página
@@ -119,6 +118,5 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
       this.paginator.length = this.totalItems;
       this.paginator.pageSize = this.currentPageSize;
     }
-    console.log('Paginator:', this.dataSource.paginator);
   }
 }

@@ -94,17 +94,8 @@ export class HighlightDirective implements OnChanges, AfterViewInit {
     // Usar NgZone para ejecutar fuera de la zona y evitar ciclos de detección adicionales
     this.zone.runOutsideAngular(() => {
       if (!this.textContent || !this.appHighlight) {
-        console.log('Highlight: Missing content or search term', {
-          content: !!this.textContent,
-          term: this.appHighlight
-        });
         return;
       }
-
-      console.log('Applying highlight:', {
-        content: this.textContent,
-        term: this.appHighlight
-      });
 
       // Escapar caracteres especiales de regex en el término de búsqueda
       const escapedTerm = this.appHighlight.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
@@ -114,13 +105,10 @@ export class HighlightDirective implements OnChanges, AfterViewInit {
 
       // Verificar si hay coincidencias
       if (!regex.test(this.textContent)) {
-        console.log('No matches found for:', this.appHighlight);
         // No hay coincidencias, mantener el texto original
         this.resetToOriginal();
         return;
       }
-
-      console.log('Matches found, applying highlight');
 
       // Crear un nuevo elemento span para el contenido resaltado
       const span = this.renderer.createElement('span');
@@ -133,4 +121,4 @@ export class HighlightDirective implements OnChanges, AfterViewInit {
       this.hasBeenHighlighted = true;
     });
   }
-} 
+}
