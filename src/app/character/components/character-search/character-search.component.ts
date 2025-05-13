@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import {FormsModule} from '@angular/forms';
 import { CharacterService } from '@character/services/character.service';
 import { Character } from '@character/models/character-response.model';
+import { NgIf } from '@angular/common';
 
 
 interface Filter {
@@ -28,7 +29,7 @@ interface Status {
     MatInputModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatSelectModule
+    MatSelectModule, NgIf
   ],
   templateUrl: './character-search.component.html',
 
@@ -54,12 +55,22 @@ export class CharacterSearchComponent {
 
   applyFilterByName(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.nameTerm.set(filterValue);
-    this.characterService.getCharacterByQuery(this.query());
+    this.nameTerm.set(filterValue.trim().toLowerCase());
+    this.applyFilter();
   }
-
   applyFilterByStatus(value: string) {
     this.statusTerm.set(value);
-    this.characterService.getCharacterByQuery(this.query());
+    this.applyFilter();
+  }
+  clearFilters() {
+    this.nameTerm.set('');
+    this.statusTerm.set('');
+    this.applyFilter();
+  }
+  private applyFilter() {
+    // Pequeña pausa para evitar múltiples peticiones mientras se escribe
+    setTimeout(() => {
+      this.characterService.getCharacterByQuery(this.query());
+    }, 300);
   }
 }

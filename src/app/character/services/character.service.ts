@@ -112,7 +112,14 @@ export class CharacterService {
   }
   getCharacterByQuery(query: string): void {
     this.charactersLoading.set(true);
-    this.http.get<CharacterResponse>(`${API_URL}/character/?${query}`).pipe(
+    // Resetear a la página 1 cuando se aplica un filtro
+    this.charactersPage.set(1);
+    // Si query está vacío, simplemente recuperamos todos los personajes
+    if (!query || query === '') {
+      this.getCharacters(1, this.pageSize());
+      return;
+    }
+    this.http.get<CharacterResponse>(`${API_URL}/character${query}`).pipe(
       tap(resp => {
         if (resp.info) {
           this.totalPages.set(resp.info.pages);
@@ -136,7 +143,6 @@ export class CharacterService {
       }
       this.characters.set(items);
       this.charactersLoading.set(false);
-      console.log({items});
     });
   }
 }
