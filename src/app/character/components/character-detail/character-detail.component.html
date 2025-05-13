@@ -65,7 +65,7 @@
             <div class="px-1 text-xs">
               <p class="py-1 text-xs"><strong>Name:</strong> {{ character()?.origin?.name }}</p>
               <p class="py-1 text-xs"><strong>Type:</strong> {{ character()?.origin?.type }} </p>
-              <p class="py-1 text-xs"><strong>Dimension:</strong> {{ character()?.origin?.dimension }} </p>
+              <p class="py-1 text-xs"><strong>Dimension:</strong> {{ character()?.origin?.dimension | truncate: 20 }} </p>
               @if( character()?.originResidents ){
                 <div>
                   <p class="py-1 text-xs"><strong>Resident:</strong> {{ character()?.originResidents?.name }} </p>
@@ -91,7 +91,7 @@
             <div class="px-1 text-xs">
               <p class="py-1 text-xs"><strong>Name:</strong> {{ character()?.location?.name }}</p>
               <p class="py-1 text-xs"><strong>Type:</strong> {{ character()?.location?.type }} </p>
-              <p class="py-1 text-xs"><strong>Dimension:</strong> {{ character()?.location?.type }} </p>
+              <p class="py-1 text-xs"><strong>Dimension:</strong> {{ character()?.location?.type | truncate: 20 }} </p>
               @if( character()?.locationResidents ){
                 <div>
                   <p class="py-1 text-xs"><strong>Resident:</strong> {{ character()?.locationResidents?.name }} </p>
@@ -117,7 +117,7 @@
           @if ( character()?.firstEpisode) {
             <div class="px-1 text-xs">
               <p class="py-1 text-xs"><strong>Episode:</strong> {{ character()?.firstEpisode?.episode }}</p>
-              <p class="py-1 text-xs"><strong>Name:</strong> {{ character()?.firstEpisode?.name }} </p>
+              <p class="py-1 text-xs"><strong>Name:</strong> {{ character()?.firstEpisode?.name | truncate: 40 }} </p>
               <p class="py-1 text-xs"><strong>Date:</strong> {{ character()?.firstEpisode?.air_date }} </p>
             </div>
           }@else {

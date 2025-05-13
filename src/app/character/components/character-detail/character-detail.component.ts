@@ -11,12 +11,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CharacterService } from '@character/services/character.service';
 import { Episode } from '@character/models/episode.model';
 import { Character, CharacterDetails } from '@character/models/character-response.model';
-
-
 import { LocationDetail } from '@character/models/location.model';
 import { addFavorite, removeFavorite } from 'src/app/store/character/character.actions';
 import { Observable, take } from 'rxjs';
 import { selectFavorites } from 'src/app/store/character/character.selectors';
+import { TruncatePipe } from '@character/pipes/truncate.pipe';
 
 
 @Component({
@@ -29,6 +28,7 @@ import { selectFavorites } from 'src/app/store/character/character.selectors';
     MatDividerModule,
     MatChipsModule,
     MatButtonModule,
+    TruncatePipe
   ],
   templateUrl: './character-detail.component.html',
 
