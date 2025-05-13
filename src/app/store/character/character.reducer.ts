@@ -23,7 +23,7 @@ export const characterReducer = createReducer(
   on(removeFavorite, (state, { id }) => ({
     ...state,
     favorite: state.favorite.filter((character) => character.id !== id),
-  }),
+  })),
 
   on(setCurrentCharacter, (state, { character }) => ({
     ...state,
@@ -31,4 +31,4 @@ export const characterReducer = createReducer(
   }))
 
 
-));
+);
