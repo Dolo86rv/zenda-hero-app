@@ -1,0 +1,115 @@
+@if (!character()){
+  <div class="flex justify-center items-center h-full">
+    <p>No hay personaje seleccionado</p>
+  </div>
+}@else {
+  <mat-card class="w-[500px] p-4 h-full">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <!-- Imagen y Nombre -->
+      <div class="flex flex-col pb-4 items-center border rounded mb-4">
+        <h2 class="text-xl font-bold mb-2 mt-2 px-2">{{ character()?.character?.name }}</h2>
+        <img
+          [src]="character()?.character?.image"
+          alt="Character Image"
+          class="h-36 w-36 rounded object-cover mb-4 items-center"
+        >
+        <div class="flex flex-col gap-2 mb-3 mr-16">
+          <div class="ml-2">
+            <span class="py-1 px-2 my-2 rounded text-sm font-medium bg-green-100 text-green-800">
+              Status:
+            </span>
+            <span class="ml-2 text-xs">{{ character()?.character?.status }}</span>
+          </div>
+          <div class="ml-2">
+            <span class="py-1 px-2 my-2 rounded text-sm font-medium bg-blue-100 text-blue-800">
+              Species:
+            </span>
+            <span class="ml-2 text-xs">{{ character()?.character?.species }}</span>
+          </div>
+          <div class="ml-2">
+            <span class="py-1 px-2 my-2 rounded text-sm font-medium bg-purple-100 text-purple-800">
+              Gender:
+            </span>
+            <span class="ml-2 text-xs">{{ character()?.character?.gender }}</span>
+          </div>
+        </div>
+        <button mat-fab extended class="mt-24 h-2 w-2">
+          <mat-icon class="">favorite</mat-icon>
+          Favorito
+        </button>
+      </div>
+
+      <!-- Información Detallada -->
+      <div class="flex flex-col gap-5">
+        <!-- Origen -->
+        <section>
+          <h3 class="text-md font-medium mb-1 pb-1 border-b">Origin</h3>
+          @if ( character()?.origin) {
+            <div class="px-1 text-xs">
+              <p class="py-1 text-xs"><strong>Name:</strong> {{ character()?.origin?.name }}</p>
+              <p class="py-1 text-xs"><strong>Type:</strong> {{ character()?.origin?.type }} </p>
+              <p class="py-1 text-xs"><strong>Dimension:</strong> {{ character()?.origin?.dimension }} </p>
+              @if( character()?.originResidents ){
+                <div>
+                  <p class="py-1 text-xs"><strong>Resident:</strong> {{ character()?.originResidents?.name }} </p>
+                  <div>
+                    <p class="py-1 text-xs ml-6"><strong>* Status:</strong> {{ character()?.originResidents?.status }} </p>
+                    <p class="py-1 text-xs ml-6"><strong>* Species:</strong> {{ character()?.originResidents?.species }} </p>
+                  </div>
+                </div>
+
+              }@else{
+                <p class="py-2 text-gray-500 text-xs"> No existen residentes</p>
+              }
+            </div>
+          }@else {
+            <p class="py-2 text-gray-500 text-xs"> No existe información</p>
+          }
+        </section>
+
+        <!-- Localización -->
+        <section>
+          <h3 class="text-md font-medium mb-1 pb-1 border-b">Location</h3>
+          @if ( character()?.location) {
+            <div class="px-1 text-xs">
+              <p class="py-1 text-xs"><strong>Name:</strong> {{ character()?.location?.name }}</p>
+              <p class="py-1 text-xs"><strong>Type:</strong> {{ character()?.location?.type }} </p>
+              <p class="py-1 text-xs"><strong>Dimension:</strong> {{ character()?.location?.type }} </p>
+              @if( character()?.locationResidents ){
+                <div>
+                  <p class="py-1 text-xs"><strong>Resident:</strong> {{ character()?.locationResidents?.name }} </p>
+                  <div>
+                    <p class="py-1 text-xs ml-6"><strong>* Status:</strong> {{ character()?.locationResidents?.status }} </p>
+                    <p class="py-1 text-xs ml-6"><strong>* Species:</strong> {{ character()?.locationResidents?.species }} </p>
+                  </div>
+                </div>
+              }@else{
+                <p class="py-2 text-gray-500 text-xs"> No existen residentes</p>
+              }
+            </div>
+          }@else {
+            <p class="py-2 text-gray-500 text-xs"> No existe información</p>
+          }
+          <!--Esto se debe mostrar si no hay seleccionado ningun personaje-->
+          <!--p class="py-1 text-gray-500 text-xs">Información de localización desconocida</p-->
+        </section>
+
+        <!-- Primer Episodio -->
+        <section>
+          <h3 class="text-md font-medium mb-1 pb-1 border-b">First Episode</h3>
+          @if ( character()?.firstEpisode) {
+            <div class="px-1 text-xs">
+              <p class="py-1 text-xs"><strong>Episode:</strong> {{ character()?.firstEpisode?.episode }}</p>
+              <p class="py-1 text-xs"><strong>Name:</strong> {{ character()?.firstEpisode?.name }} </p>
+              <p class="py-1 text-xs"><strong>Date:</strong> {{ character()?.firstEpisode?.air_date }} </p>
+            </div>
+          }@else {
+            <p class="py-2 text-gray-500 text-xs"> No existe información</p>
+          }
+        </section>
+      </div>
+    </div>
+  </mat-card>
+}
+
+

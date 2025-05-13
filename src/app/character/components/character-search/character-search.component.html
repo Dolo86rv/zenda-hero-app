@@ -1,0 +1,32 @@
+
+<div>
+  <form [formGroup]="searchForm" class="">
+    <div class="flex items-center gap-2 w-full max-w-md mx-auto my-4">
+      <div class="w-full">
+        <mat-form-field class="w-full rounded-md" appearance="outline">
+          <mat-icon matPrefix>search</mat-icon>
+          <input
+            matInput [(ngModel)]="searchTerm"
+            placeholder="Buscar personaje"
+            class="bg-white"
+            formControlName="name"
+          >
+          <button matSuffix mat-icon-button (click)="searchTerm = ''">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+
+      <div class="items-end">
+        <mat-form-field class="ml-8 w-full">
+          <mat-label>Filter by type</mat-label>
+          <mat-select formControlName="type" panelClass="types-select-panel">
+            @for (food of foods; track food) {
+              <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</div>

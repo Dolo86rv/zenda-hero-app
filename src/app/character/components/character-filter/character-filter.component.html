@@ -1,0 +1,8 @@
+<mat-form-field class="ml-8 bg-gray-100">
+  <mat-label>Filter by type</mat-label>
+  <mat-select class="">
+    @for (food of foods; track food) {
+      <mat-option [value]="food.value">{{food.viewValue}}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>

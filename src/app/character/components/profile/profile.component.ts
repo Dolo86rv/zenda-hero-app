@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'character-side-menu-options',
+  selector: 'profile',
   imports: [],
-  templateUrl: './side-menu-options.component.html',
+  templateUrl: './profile.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SideMenuOptionsComponent { }
+export class ProfileComponent { }

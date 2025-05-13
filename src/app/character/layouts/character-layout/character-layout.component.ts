@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SideMenuComponent } from '@character/components/side-menu/side-menu.component';
+import { CharacterHeaderComponent } from '@character/components/character-header/character-header.component';
 
 @Component({
   selector: 'app-character-layout',
-  imports: [RouterOutlet, SideMenuComponent],
+  imports: [RouterOutlet, CharacterHeaderComponent],
   templateUrl: './character-layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

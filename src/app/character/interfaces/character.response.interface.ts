@@ -1,9 +1,12 @@
-export interface TopLevel {
-  info:    Info;
+import { Episode } from "./episode.interface";
+import { LocationDetail } from "./location.interface";
+
+export interface CharacterResponse {
+  info:    PaginationInfo;
   results: Character[];
 }
 
-export interface Info {
+export interface PaginationInfo {
   count: number;
   pages: number;
   next:  string;
@@ -23,6 +26,14 @@ export interface Character {
   episode:  string[];
   url:      string;
   created:  Date;
+}
+export interface CharacterDetails {
+  character: Character | null;
+  origin: LocationDetail | null;
+  location: LocationDetail | null;
+  firstEpisode: Episode | null;
+  originResidents: Character | null;
+  locationResidents: Character | null;
 }
 
 export enum Gender {
@@ -46,3 +57,13 @@ export enum Status {
   Dead = "Dead",
   Unknown = "unknown",
 }
+
+export interface CharacterFilter {
+  name?: string;
+  type?: string;
+  status?: string;
+  species?: string;
+  gender?: string;
+}
+
+
