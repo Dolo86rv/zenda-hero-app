@@ -6,13 +6,11 @@
   <div class="flex items-center mr-16">
     <mat-icon class="">favorite</mat-icon>
     <span class="text-white text-xl font-medium ml-2"> Favorite: </span>
-    <ul class="flex flex-col gap-2">
-      @for (item of favorite$ | async; track $index) {
-        <li>
-          <span class="text-amber-400 text-xl font-medium my-12 pb-4 ml-3"> {{ item.name }} </span>
-        </li>
-      }
-    </ul>
+    @if (isFavorite()) {
+      <div class="flex flex-col gap-2">
+        <span class="text-amber-400 text-xl font-medium ml-3"> {{ selectedCharacter()?.name }} </span>
+      </div>
+    }
   </div>
 </div>
 

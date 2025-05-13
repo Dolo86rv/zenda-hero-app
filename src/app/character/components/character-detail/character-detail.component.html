@@ -40,7 +40,7 @@
               type="button"
               (click)="toggledFavorites(character()!.character!)"
             >
-              <span>{{ character()?.character?.name }}</span>
+              <span> Favorite</span>
             </button>
           </div>
         }@else {
@@ -51,7 +51,7 @@
             (click)="toggledFavorites(character()!.character!)"
           >
             <mat-icon class="">favorite</mat-icon>
-            <span>{{ character()?.character?.name }}</span>
+            <span>Favorite</span>
           </button>
         }
       </div>

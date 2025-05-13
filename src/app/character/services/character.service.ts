@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Gender, Species, Status, type CharacterResponse } from '../models/character-response.model';
-import { catchError, Observable, of, tap } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { CharacterMapper } from '@character/mappers/character.mapper';
 import { CharacterItem } from '@character/models/character.model';
 import { Episode } from '@character/models/episode.model';
@@ -69,5 +69,13 @@ export class CharacterService {
     return this.http.get<CharacterItem>(baseUrl).pipe(
       tap((resp) => console.log(`location: ${resp.name}`)),
     );
+  }
+
+  getCharacterByQuery(query: string): void {
+    this.http.get<CharacterResponse>(`${API_URL}/character/${query}`).subscribe((resp) => {
+      const items = CharacterMapper.mapCharacterItems(resp.results);
+      this.characters.set(items);
+      console.log({items})
+    });
   }
 }

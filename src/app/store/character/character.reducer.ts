@@ -30,5 +30,4 @@ export const characterReducer = createReducer(
     selectedCharacter: character,
   }))
 
-
 );
