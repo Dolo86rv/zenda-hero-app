@@ -1,14 +1,12 @@
 import { AfterViewInit, Component, inject, Input, ViewChild } from '@angular/core';
 import {MatTableModule, MatTableDataSource} from '@angular/material/table';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import { CharacterItem } from '@character/interfaces/character.interface';
-import { Gif } from '@character/interfaces/gif.interface';
+import { CharacterItem } from '@character/models/character.model';
+import { Gif } from '@character/models/gif.interface';
 import { CharacterDetailComponent } from "../character-detail/character-detail.component";
 import { CharacterService } from '@character/services/character.service';
-import { Episode } from '@character/interfaces/episode.interface';
-import { LocationDetail } from '@character/interfaces/location.interface';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { CharacterDetails } from '@character/interfaces/character.response.interface';
+import { CharacterDetails } from '@character/models/character-response.model';
 import { DatePipe } from '@angular/common';
 import { CharacterSearchComponent } from "../character-search/character-search.component";
 

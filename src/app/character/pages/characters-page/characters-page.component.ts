@@ -3,8 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CharacterTableComponent } from '@character/components/character-table/character-table.component';
 import { TabCountComponent } from '@character/components/tab-group/tab-group.component';
-import { CharacterItem } from '@character/interfaces/character.interface';
-import { Gif } from '@character/interfaces/gif.interface';
+import { CharacterItem } from '@character/models/character.model';
+import { Gif } from '@character/models/gif.interface';
 import { CharacterService } from '@character/services/character.service';
 import { GifService } from '@character/services/gifs.service';
 

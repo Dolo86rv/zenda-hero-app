@@ -1,5 +1,6 @@
-import { Episode } from "./episode.interface";
-import { LocationDetail } from "./location.interface";
+import { Episode } from "./episode.model";
+import { LocationDetail } from "./location.model";
+
 
 export interface CharacterResponse {
   info:    PaginationInfo;

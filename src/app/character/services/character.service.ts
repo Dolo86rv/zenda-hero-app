@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
-import { Gender, Species, Status, type CharacterResponse } from '../interfaces/character.response.interface';
+import { Gender, Species, Status, type CharacterResponse } from '../models/character-response.model';
 import { catchError, Observable, of, tap } from 'rxjs';
 import { CharacterMapper } from '@character/mappers/character.mapper';
-import { CharacterItem } from '@character/interfaces/character.interface';
-import { Episode } from '@character/interfaces/episode.interface';
-import { LocationDetail } from '@character/interfaces/location.interface';
+import { CharacterItem } from '@character/models/character.model';
+import { Episode } from '@character/models/episode.model';
+import { LocationDetail } from '@character/models/location.model';
+
 
 const API_URL = environment.baseUrl;
 
@@ -50,7 +51,7 @@ export class CharacterService {
     if (!baseUrl) return of({} as Episode);
 
     return this.http.get<Episode>(baseUrl).pipe(
-      tap((resp) => console.log(`Fetched episode: ${resp.name}`)),
+      tap((resp) => console.log(`episode: ${resp.name}`)),
     );
   }
 
@@ -58,15 +59,15 @@ export class CharacterService {
     if (!baseUrl) return of({} as LocationDetail);
 
     return this.http.get<LocationDetail>(baseUrl).pipe(
-      tap((resp) => console.log(`Fetched location: ${resp.name}`)),
+      tap((resp) => console.log(`location: ${resp.name}`)),
     );
   }
 
   getResidents(residents: string[]): Observable<CharacterItem> {
     if (residents.length <= 0) return of({} as CharacterItem);
-    const baseUrl = residents[0]; 
+    const baseUrl = residents[0];
     return this.http.get<CharacterItem>(baseUrl).pipe(
-      tap((resp) => console.log(`Fetched location: ${resp.name}`)),
+      tap((resp) => console.log(`location: ${resp.name}`)),
     );
   }
 }

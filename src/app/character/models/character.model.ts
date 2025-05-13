@@ -1,4 +1,4 @@
-import { Gender, Species, Status, Location } from "./character.response.interface";
+import { Gender, Species, Status, Location } from "./character-response.model";
 
 export interface CharacterItem {
   id:       number;

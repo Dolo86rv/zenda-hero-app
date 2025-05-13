@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Gif } from '@character/interfaces/gif.interface';
-import { GiphyResponse } from '@character/interfaces/giphy.interface';
+import { Gif } from '@character/models/gif.interface';
+import { GiphyResponse } from '@character/models/giphy.interface';
 import { GifMapper } from '@character/mappers/gif.mapper';
 import { environment } from 'src/environments/environment';
 

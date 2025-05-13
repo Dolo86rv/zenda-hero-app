@@ -3,9 +3,16 @@
   <div id="logo" class="my-4 px-6">
     <h1 class="text-lg md:text-2xl font-bold text-amber-400">Zenda<span class="text-white"> | </span><span class="text-white"> Hero</span></h1>
   </div>
-  <div class="pr-52 items-center">
+  <div class="flex items-center mr-16">
     <mat-icon class="">favorite</mat-icon>
-    <span class="text-white text-xl font-medium my-12 pb-4"> Favorite:</span>
+    <span class="text-white text-xl font-medium ml-2"> Favorite: </span>
+    <ul class="flex flex-col gap-2">
+      @for (item of favorite$ | async; track $index) {
+        <li>
+          <span class="text-amber-400 text-xl font-medium my-12 pb-4 ml-3"> {{ item.name }} </span>
+        </li>
+      }
+    </ul>
   </div>
 </div>
 

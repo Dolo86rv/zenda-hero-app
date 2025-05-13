@@ -1,5 +1,5 @@
-import { CharacterItem } from "@character/interfaces/character.interface";
-import { Character } from "@character/interfaces/character.response.interface";
+import { CharacterItem } from "@character/models/character.model";
+import { Character } from "@character/models/character-response.model";
 
 export class CharacterMapper {
   static mapCharacterItem(item: Character):  CharacterItem{
