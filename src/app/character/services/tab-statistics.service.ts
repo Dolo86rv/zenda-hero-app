@@ -1,63 +1,38 @@
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
 import { CharacterService } from './character.service';
 import { HttpClient } from '@angular/common/http';
-// Interfaces simples para los conteos
-export interface SpeciesCount {
-  species: string;
-  count: number;
-}
-export interface TypeCount {
-  type: string;
-  count: number;
-}
-// Interfaces para GraphQL
-interface CharacterFilter {
-  name?: string;
-  status?: string;
-  species?: string;
-  type?: string;
-  gender?: string;
-}
-interface GraphQLVariables {
-  page?: number;
-  filter: CharacterFilter;
-}
-interface GraphQLResponse {
-  data?: {
-    characters?: {
-      info?: {
-        count: number;
-        pages: number;
-      };
-      results?: Array<{
-        species?: string;
-        type?: string;
-      }>;
-    };
-  };
-}
+import { SpeciesCount, TypeCount } from '@character/models/auxiliar.model';
+import { GraphQLResponse, GraphQLVariables } from '@character/models/auxiliar.model';
+import { environment } from 'src/environments/environment.development';
+
+const API_URL = environment.baseUrlGraphQL;
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class TabStatisticsService {
   private characterService = inject(CharacterService);
   private http = inject(HttpClient);
+
   // Datos de estadísticas
   private speciesCountData = signal<SpeciesCount[]>([]);
   private typeCountData = signal<TypeCount[]>([]);
   private loading = signal<boolean>(false);
+
   // Propiedades computadas para los componentes
   speciesCount = computed(() => this.speciesCountData());
   typeCount = computed(() => this.typeCountData());
   totalSpecies = computed(() => this.speciesCount().length);
   totalTypes = computed(() => this.typeCount().length);
   isLoading = computed(() => this.loading());
+
   // Signal para los personajes de la página actual
   private currentCharacters = signal<any[]>([]);
+
   constructor() {
-    // Efecto para actualizar las estadísticas cuando cambia la página o filtros
+    //Actualiza las estadísticas cuando cambia la página o filtros
     effect(() => {
-      // Observamos los cambios en la página, tamaño de página, y filtros
       const characters = this.characterService.charactersArray();
       const currentPage = this.characterService.currentPage();
       const pageSize = this.characterService.currentPageSize();
@@ -107,6 +82,7 @@ export class TabStatisticsService {
     }
     // Si no tenemos personajes, hacemos fetch
     this.loading.set(true);
+
     // Obtener los términos de búsqueda y paginación del servicio existente
     const nameTerm = this.characterService.nameTerm();
     const statusTerm = this.characterService.statusTerm();
@@ -123,6 +99,7 @@ export class TabStatisticsService {
     if (statusTerm) {
       variables.filter.status = statusTerm;
     }
+    
     // Consulta GraphQL
     const query = `
       query GetCharactersStatistics($page: Int, $filter: FilterCharacter) {
@@ -142,8 +119,9 @@ export class TabStatisticsService {
         }
       }
     `;
-    // Realizar la petición GraphQL
-    this.http.post<GraphQLResponse>('https://rickandmortyapi.com/graphql', {
+
+    /*** Realizar la petición GraphQL **/
+    this.http.post<GraphQLResponse>(`${API_URL}`, {
       query,
       variables
     }).subscribe({

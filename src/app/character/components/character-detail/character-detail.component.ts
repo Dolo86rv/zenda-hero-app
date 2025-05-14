@@ -34,8 +34,7 @@ import { TruncatePipe } from '@character/pipes/truncate.pipe';
 
 })
 export class CharacterDetailComponent {
-  //gif = input.required<Gif>();
-  character = input.required<CharacterDetails | undefined>();
+  character = input.required<CharacterDetails | null>();
   characterService = inject(CharacterService);
 
   characterLocation = signal<LocationDetail | null>(null);

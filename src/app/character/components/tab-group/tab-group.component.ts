@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { CommonModule } from '@angular/common';
 import { TabStatisticsService } from '@character/services/tab-statistics.service';
@@ -8,7 +8,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   standalone: true,
   imports: [MatTabsModule, CommonModule, MatProgressSpinnerModule],
   templateUrl: './tab-group.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styles:
+  `
+    ::ng-deep .mat-tab-label.mat-tab-label-active {
+      @apply bg-blue-500 text-white rounded-t-lg shadow;
+    }
+  `
 })
 export class TabCountComponent {
   // Inyectamos el servicio de estadísticas con GraphQL

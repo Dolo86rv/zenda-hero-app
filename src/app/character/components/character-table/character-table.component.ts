@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, effect, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, Input, OnInit, signal, ViewChild } from '@angular/core';
 import { MatTableModule, MatTableDataSource} from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/paginator';
 import { CharacterItem } from '@character/models/character.model';
@@ -27,7 +27,7 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
   characterService = inject(CharacterService);
   @Input() dataSource!: MatTableDataSource<CharacterItem>
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  itemCharacter?: CharacterDetails;
+  itemCharacter = signal<CharacterDetails | null>(null);
   totalItems: number = 0;
   currentPageSize: number = 20;
   displayedColumns: string[] = [
@@ -107,7 +107,7 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
         );
       })
     ).subscribe((resp) => {
-      this.itemCharacter = resp;
+      this.itemCharacter.set(resp);
       this.store.dispatch(setCurrentCharacter({ character: resp.character }));
     })
   }

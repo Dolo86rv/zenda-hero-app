@@ -7,7 +7,9 @@ import { CharacterMapper } from '@character/mappers/character.mapper';
 import { CharacterItem } from '@character/models/character.model';
 import { Episode } from '@character/models/episode.model';
 import { LocationDetail } from '@character/models/location.model';
+
 const API_URL = environment.baseUrl;
+
 const emptyCharacter: CharacterItem = {
     id: 0,
     name: '',
@@ -25,7 +27,7 @@ const emptyCharacter: CharacterItem = {
 @Injectable({providedIn: 'root'})
 export class CharacterService {
   private http = inject(HttpClient);
-  private charactersPage = signal(1); // Comenzamos en la página 1
+  private charactersPage = signal(1);
   private pageSize = signal(20); // Tamaño de página por defecto de la API
   charactersLoading = signal(false);
   characters = signal<CharacterItem[]>([]);
@@ -43,13 +45,12 @@ export class CharacterService {
   currentPageSize = computed(() => this.pageSize());
   totalPagesValue = computed(() => this.totalPages());
   totalCharactersValue = computed(() => this.totalCharacters());
+
   getCharacters(page: number = 1, size: number = 20): void {
     this.charactersLoading.set(true);
     this.charactersPage.set(page);
     this.pageSize.set(size);
-    // La API de Rick y Morty siempre devuelve 20 elementos por página,
-    // por lo que no podemos modificar el tamaño de página en la solicitud.
-    // En su lugar, obtenemos la página y luego filtramos los resultados.
+
     this.http.get<CharacterResponse>(`${API_URL}/character?page=${page}`).pipe(
       tap(resp => {
         if (resp.info) {
@@ -111,13 +112,14 @@ export class CharacterService {
     if (residents.length <= 0) return of({} as CharacterItem);
     const baseUrl = residents[0];
     return this.http.get<CharacterItem>(baseUrl).pipe(
-      tap((resp) => console.log(`location: ${resp.name}`)),
+      tap((resp) => console.log(`Residents: ${resp.name}`)),
     );
   }
   getCharacterByQuery(query: string): void {
     this.charactersLoading.set(true);
     // Resetear a la página 1 cuando se aplica un filtro
     this.charactersPage.set(1);
+
     // Si query está vacío, simplemente recuperamos todos los personajes
     if (!query || query === '') {
       this.getCharacters(1, this.pageSize());
@@ -140,7 +142,8 @@ export class CharacterService {
       })
     ).subscribe((resp) => {
       let items = CharacterMapper.mapCharacterItems(resp.results);
-      // Aplicamos el tamaño de página
+
+      // Se aplica el tamaño de página
       const size = this.pageSize();
       if (size !== 20) {
         items = items.slice(0, size);
