@@ -9,6 +9,7 @@ import {FormsModule} from '@angular/forms';
 import { CharacterService } from '@character/services/character.service';
 import { Character } from '@character/models/character-response.model';
 import { NgIf } from '@angular/common';
+import { CharacterFilterComponent } from "../character-filter/character-filter.component";
 
 
 interface Filter {
@@ -29,8 +30,9 @@ interface Status {
     MatInputModule,
     MatIconModule,
     ReactiveFormsModule,
-    MatSelectModule, NgIf
-  ],
+    MatSelectModule,
+    CharacterFilterComponent
+],
   templateUrl: './character-search.component.html',
 
 })
@@ -39,12 +41,6 @@ export class CharacterSearchComponent {
 
   nameTerm = this.characterService.nameTerm; ;
   statusTerm = this.characterService.statusTerm;
-  query = computed(() => {
-    if (!this.nameTerm() && !this.statusTerm()) return '';
-    if (this.nameTerm() && !this.statusTerm()) return `?name=${this.nameTerm()}`;
-    if (!this.nameTerm() && this.statusTerm()) return `?status=${this.statusTerm()}`;
-    return `?name=${this.nameTerm()}&status=${this.statusTerm()}`;
-  })
 
   estados = signal<Status[]>([
     {value: 'alive', viewValue: 'Alive'},
@@ -52,25 +48,16 @@ export class CharacterSearchComponent {
     {value: 'unknown', viewValue: 'Unknown'},
   ]);
 
-
   applyFilterByName(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.nameTerm.set(filterValue.trim().toLowerCase());
-    this.applyFilter();
+    this.characterService.applyFilter();
   }
-  applyFilterByStatus(value: string) {
-    this.statusTerm.set(value);
-    this.applyFilter();
-  }
+
   clearFilters() {
     this.nameTerm.set('');
     this.statusTerm.set('');
-    this.applyFilter();
+    this.characterService.applyFilter();
   }
-  private applyFilter() {
-    // Pequeña pausa para evitar múltiples peticiones mientras se escribe
-    setTimeout(() => {
-      this.characterService.getCharacterByQuery(this.query());
-    }, 300);
-  }
+
 }

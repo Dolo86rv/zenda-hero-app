@@ -33,3 +33,12 @@ export interface GraphQLResponse {
     };
   };
 }
+
+export interface Filter {
+  name: string;
+  type: string;
+}
+export interface Status {
+  value: string;
+  viewValue: string;
+}

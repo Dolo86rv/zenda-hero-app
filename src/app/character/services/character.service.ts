@@ -46,6 +46,13 @@ export class CharacterService {
   totalPagesValue = computed(() => this.totalPages());
   totalCharactersValue = computed(() => this.totalCharacters());
 
+  query = computed(() => {
+    if (!this.nameTerm() && !this.statusTerm()) return '';
+    if (this.nameTerm() && !this.statusTerm()) return `?name=${this.nameTerm()}`;
+    if (!this.nameTerm() && this.statusTerm()) return `?status=${this.statusTerm()}`;
+    return `?name=${this.nameTerm()}&status=${this.statusTerm()}`;
+  })
+
   getCharacters(page: number = 1, size: number = 20): void {
     this.charactersLoading.set(true);
     this.charactersPage.set(page);
@@ -151,5 +158,12 @@ export class CharacterService {
       this.characters.set(items);
       this.charactersLoading.set(false);
     });
+  }
+
+  applyFilter() {
+    // Pequeña pausa para evitar múltiples peticiones mientras se escribe
+    setTimeout(() => {
+      this.getCharacterByQuery(this.query());
+    }, 300);
   }
 }

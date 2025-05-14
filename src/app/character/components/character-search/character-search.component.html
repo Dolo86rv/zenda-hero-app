@@ -3,26 +3,20 @@
   <mat-form-field appearance="fill">
     <mat-label>Filter by name</mat-label>
     <input matInput (keyup)="applyFilterByName($event)" placeholder="Rick" #input>
-    <button *ngIf="nameTerm()" matSuffix mat-icon-button (click)="clearFilters()">
-      <mat-icon>close</mat-icon>
-    </button>
+    @if( nameTerm() ) {
+      <button matSuffix mat-icon-button (click)="clearFilters()">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
   </mat-form-field>
-  <mat-form-field>
-    <mat-label>Filter by Status</mat-label>
-    <mat-select [value]="statusTerm()">
-      @for (estado of estados(); track estado.value) {
-        <mat-option [value]="estado.value" (click)="applyFilterByStatus(estado.value)">
-          {{estado.viewValue}}
-        </mat-option>
-      }
-    </mat-select>
-    <button *ngIf="statusTerm()" matSuffix mat-icon-button (click)="clearFilters()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </mat-form-field>
-  <div *ngIf="statusTerm() || nameTerm()" class="flex items-center">
-    <button mat-raised-button color="warn" (click)="clearFilters()">
-      Clear Filters
-    </button>
-  </div>
+
+  <character-filter />
+
+  @if(statusTerm() || nameTerm()){
+    <div class="ml-2 mb-5">
+      <button mat-fab extended (click)="clearFilters()">
+        Clear Filters
+      </button>
+    </div>
+  }
 </div>
