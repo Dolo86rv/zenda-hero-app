@@ -14,7 +14,7 @@ import { Character, CharacterDetails } from '@character/models/character-respons
 import { LocationDetail } from '@character/models/location.model';
 import { removeFavorite, setFavorite } from 'src/app/store/character/character.actions';
 import { Observable, take, tap } from 'rxjs';
-import { selectFavorites } from 'src/app/store/character/character.selectors';
+import { selectDetail, selectFavorites } from 'src/app/store/character/character.selectors';
 import { TruncatePipe } from '@character/pipes/truncate.pipe';
 
 
@@ -34,27 +34,27 @@ import { TruncatePipe } from '@character/pipes/truncate.pipe';
 
 })
 export class CharacterDetailComponent {
-  character = input.required<CharacterDetails | null>();
   characterService = inject(CharacterService);
 
   characterLocation = signal<LocationDetail | null>(null);
   characterEpisode = signal<Episode | null>(null);
   characterOrigin = signal<LocationDetail | null>(null);
-  favorite$: Observable<Character | null>;
-  characterFavorite = signal<Character | null>(null);
+  characterFavorite = signal<CharacterDetails | null>(null);
+  character = signal<CharacterDetails | null>(null);
 
   isFavorite = signal<boolean>(false);
 
   constructor(private store: Store) {
-    this.favorite$ = this.store.select(selectFavorites)
-          .pipe(
-            tap((character) => {
-              this.characterFavorite.set(character);
-            })
-          );
+    this.store.select(selectFavorites).subscribe((character) => {
+      this.characterFavorite.set(character);
+    });
+
+    this.store.select(selectDetail).subscribe((character) => {
+      this.character.set(character);
+    });
   }
 
-  toggledFavorites(character: Character | null): void {
+  toggledFavorites(character: CharacterDetails | null): void {
     console.log('toggledFavorites', character);
     this.store.dispatch(setFavorite({ character }))
 

@@ -1,11 +1,11 @@
-import { Character } from "@character/models/character-response.model";
+import { Character, CharacterDetails } from "@character/models/character-response.model";
 
 export interface CharacterState {
-  selectedCharacter: Character | null;
-  favorite: Character | null;
+  favorite: CharacterDetails | null;
+  detail: CharacterDetails | null;
 }
 
 export const initialState: CharacterState = {
-  selectedCharacter: null,
   favorite: null,
+  detail: null,
 }

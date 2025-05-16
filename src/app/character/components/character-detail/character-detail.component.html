@@ -38,7 +38,7 @@
             <mat-icon class="">favorite</mat-icon>
             <button
               type="button"
-              (click)="toggledFavorites(character()!.character!)"
+              (click)="toggledFavorites(character())"
             >
               <span> Favorite</span>
             </button>
@@ -48,7 +48,7 @@
             mat-fab
             extended
             class="mt-24 h-2 w-2"
-            (click)="toggledFavorites(character()!.character!)"
+            (click)="toggledFavorites(character())"
           >
             <mat-icon class="">favorite</mat-icon>
             <span>Favorite</span>

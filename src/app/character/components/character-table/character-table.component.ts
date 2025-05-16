@@ -9,13 +9,12 @@ import { CharacterDetails } from '@character/models/character-response.model';
 import { DatePipe } from '@angular/common';
 import { CharacterSearchComponent } from "../character-search/character-search.component";
 import { Store } from '@ngrx/store';
-import { setCurrentCharacter } from 'src/app/store/character/character.actions';
 import { HighlightDirective } from '@character/directives/highlight.directive';
+import { setDetail } from 'src/app/store/character/character.actions';
 @Component({
   selector: 'character-table',
   imports: [
-    MatTableModule,
-    MatPaginatorModule,
+    MatTableModule,    MatPaginatorModule,
     CharacterDetailComponent,
     DatePipe,
     CharacterSearchComponent,
@@ -101,7 +100,7 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
       })
     ).subscribe((resp) => {
       this.itemCharacter.set(resp);
-      this.store.dispatch(setCurrentCharacter({ character: resp.character }));
+      this.store.dispatch(setDetail({ character: resp }));
     })
   }
 
