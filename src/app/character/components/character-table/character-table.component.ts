@@ -13,7 +13,14 @@ import { setCurrentCharacter } from 'src/app/store/character/character.actions';
 import { HighlightDirective } from '@character/directives/highlight.directive';
 @Component({
   selector: 'character-table',
-  imports: [MatTableModule, MatPaginatorModule, CharacterDetailComponent, DatePipe, CharacterSearchComponent, HighlightDirective],
+  imports: [
+    MatTableModule,
+    MatPaginatorModule,
+    CharacterDetailComponent,
+    DatePipe,
+    CharacterSearchComponent,
+    HighlightDirective
+  ],
   templateUrl: './character-table.component.html',
   styles: `
     /* Style search highlight */

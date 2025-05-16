@@ -12,8 +12,8 @@ import { CharacterService } from '@character/services/character.service';
 import { Episode } from '@character/models/episode.model';
 import { Character, CharacterDetails } from '@character/models/character-response.model';
 import { LocationDetail } from '@character/models/location.model';
-import { addFavorite, removeFavorite } from 'src/app/store/character/character.actions';
-import { Observable, take } from 'rxjs';
+import { removeFavorite, setFavorite } from 'src/app/store/character/character.actions';
+import { Observable, take, tap } from 'rxjs';
 import { selectFavorites } from 'src/app/store/character/character.selectors';
 import { TruncatePipe } from '@character/pipes/truncate.pipe';
 
@@ -40,47 +40,37 @@ export class CharacterDetailComponent {
   characterLocation = signal<LocationDetail | null>(null);
   characterEpisode = signal<Episode | null>(null);
   characterOrigin = signal<LocationDetail | null>(null);
-  favorite$: Observable<Character[] | null>;
-  listFavorite = signal<Character[]>([]);
+  favorite$: Observable<Character | null>;
+  characterFavorite = signal<Character | null>(null);
 
-  isFavorite = computed(() => {
-    if (this.character()?.character) {
-      return this.listFavorite().some((item) => item.id === this.character()?.character?.id) || false;
-    }
-    return false;
-  })
+  isFavorite = signal<boolean>(false);
 
   constructor(private store: Store) {
     this.favorite$ = this.store.select(selectFavorites)
-
-    this.favorite$.subscribe((data) => {
-      this.listFavorite.set(data || []);
-    });
+          .pipe(
+            tap((character) => {
+              this.characterFavorite.set(character);
+            })
+          );
   }
 
-  toggledFavorites(character: Character): void {
-    this.favorite$.pipe(take(1)).subscribe((data) => {
-      const isFavorite = data?.some((item) => item.id === character.id);
+  toggledFavorites(character: Character | null): void {
+    console.log('toggledFavorites', character);
+    this.store.dispatch(setFavorite({ character }))
 
-      if (isFavorite) {
-        this.removeFavorite(character);
-      } else {
-        this.addToFavorites(character);
-      }
-    });
-  }
 
-  addToFavorites(character: Character ) {
-    this.store.dispatch(addFavorite({ character }));
 
-  }
 
-  removeFavorite(character: Character): void {
-    const id = character.id;
-    this.store.dispatch(removeFavorite({ id }));
+    //if( this.characterFavorite() === null) {
+    //  const result = this.store.dispatch(setFavorite({ character }));
+    //  this.isFavorite.set(true);
+    //  this.characterFavorite.set(character);
+    //  console.log('setFavorite', result);
+    //  return;
+    //}else {
+    //  this.store.dispatch(removeFavorite());
+    //  this.isFavorite.set(false);
+    //}
 
   }
-
-
-
 }

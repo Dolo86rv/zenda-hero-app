@@ -7,14 +7,13 @@ export const selectCharacter = createAction(
   props<{ character: Character }>()
 );
 
-export const addFavorite = createAction(
+export const setFavorite = createAction(
   '[CharacterItem] Add Favorite',
-  props<{ character: Character }>()
+  props<{ character: Character | null}>()
 );
 
 export const removeFavorite = createAction(
-  '[Character] Remove Favorite',
-  props<{ id: number }>()
+  '[Character] Remove Favorite'
 );
 
 export const setCurrentCharacter = createAction(
