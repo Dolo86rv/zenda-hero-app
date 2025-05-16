@@ -77,49 +77,13 @@ export class CharacterSearchComponent implements OnInit {
         filter(val => !!val.name || !!val.type) // Opcional: solo si hay algún filtro activo
       ).subscribe(val => {
         // Aplica los filtros solo si cambió el valor
+
+        if( this.nameTerm() == val.name && this.statusTerm() == val.type ) return;
+        console.log('Filter applied:', val);
         this.nameTerm.set(val.name);
         this.statusTerm.set(val.type === 'allValue' ? '' : val.type);
         this.characterService.applyFilter();
       });
-  }
-
-  applyFilterByName(value: string | null) {
-    if (!value) {
-      this.nameTerm.set('');
-      this.previewName.set('');
-      this.characterService.applyFilter();
-      return;
-    }
-
-    if(this.previewName() === value) {
-      return;
-    }
-
-    this.nameTerm.set(value.trim().toLowerCase());
-    this.previewName.set(value.trim().toLowerCase());
-    this.characterService.applyFilter();
-  }
-
-  clearFilters() {
-    this.nameTerm.set('');
-    this.statusTerm.set('');
-    this.characterService.applyFilter();
-  }
-
-  applyFilterByStatus(value: string | null) {
-    if (!value || value === 'allValue') {
-      this.statusTerm.set('');
-      this.characterService.applyFilter();
-      return;
-    }
-
-    if (value === 'allValue') {
-      this.statusTerm.set('');
-      this.characterService.applyFilter();
-      return;
-    }
-    this.statusTerm.set(value);
-    this.characterService.applyFilter();
   }
 
 }

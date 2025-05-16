@@ -13,7 +13,7 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="">
-      <mat-label>Filter by Type</mat-label>
+      <mat-label>Filter by Status</mat-label>
       <mat-select formControlName="type" panelClass="">
         @for (item of estadosFilter(); track item.value) {
           <mat-option [value]="item.value">
