@@ -9,25 +9,17 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'character-header',
-  imports: [MatIconModule, MatCardModule, AsyncPipe],
+  imports: [MatIconModule, MatCardModule],
   templateUrl: './character-header.component.html',
 })
 export class CharacterHeaderComponent {
-  favorite$: Observable<Character | null>;
-  characterFavorite = computed(() => this.favorite$.subscribe(
-    (character) => {
-      console.log('characterFavorite', character);
-      return character;
-    }
-  ));
+  private favoriteCharacter = signal<Character | null>(null);
+  characterFavorite = computed(() => this.favoriteCharacter()?.name);
 
   constructor(private store: Store) {
-    console.log('CharacterHeaderComponent', this.store);
-    console.log('CharacterHeader 1111', this.store.select(selectFavorites));
-    this.favorite$ = this.store.select(selectFavorites)
+    this.store.select(selectFavorites).subscribe(character => {
+      this.favoriteCharacter.set(character);
+    });
   }
-
-
-
 
 }
