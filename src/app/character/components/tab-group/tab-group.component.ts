@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, KeyValuePipe } from '@angular/common';
 import { TabStatisticsService } from '@character/services/tab-statistics.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @Component({
   selector: 'tab-count',
   standalone: true,
-  imports: [MatTabsModule, CommonModule, MatProgressSpinnerModule],
+  imports: [MatTabsModule, CommonModule, MatProgressSpinnerModule, KeyValuePipe],
   templateUrl: './tab-group.component.html',
   styles:
   `

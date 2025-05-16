@@ -1,8 +1,8 @@
 
-<div class="flex items-center gap-2">
+<!--div class="flex items-center gap-2">
   <mat-form-field appearance="fill">
     <mat-label>Filter by name</mat-label>
-    <input matInput (keyup)="applyFilterByName($event)" placeholder="Rick" #input>
+    <input matInput (keyup.enter)="applyFilterByName($event)" placeholder="Rick" #input>
     @if( nameTerm() ) {
       <button matSuffix mat-icon-button (click)="clearFilters()">
         <mat-icon>close</mat-icon>
@@ -19,4 +19,40 @@
       </button>
     </div>
   }
+
+  <mat-select [value]="statusTerm()">
+    @for (estado of estados(); track estado.value) {
+      <mat-option [value]="estado.value" class="" (click)="applyFilterByStatus(estado.value)">
+        {{estado.viewValue}}
+      </mat-option>
+    }
+  </mat-select>
+</div-->
+
+<div>
+  <form [formGroup]="filterForm" class="filter-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Search by Name</mat-label>
+      <input
+        matInput
+        matInput
+        formControlName="name"
+        placeholder="Rick"
+        #input
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="filter-field filter-select ml-5">
+      <mat-label>Filter by Type</mat-label>
+      <mat-select formControlName="type" panelClass="types-select-panel">
+        @for (item of estadosFilter(); track item.value) {
+          <mat-option [value]="item.value">
+            {{item.viewValue}}
+          </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
 </div>
+
+

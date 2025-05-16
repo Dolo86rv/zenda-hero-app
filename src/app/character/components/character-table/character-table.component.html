@@ -59,9 +59,8 @@
         </div>
       </ng-template>
 
-      <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                      [length]="totalItems"
-                      [pageSize]="currentPageSize"
+      <mat-paginator  [length]="totalItems"
+                      [pageSize]="20"
                       (page)="handlePageEvent($event)"
                       showFirstLastButtons
                       aria-label="Select page of characters">

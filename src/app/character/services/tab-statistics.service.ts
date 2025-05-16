@@ -16,15 +16,17 @@ export class TabStatisticsService {
   private http = inject(HttpClient);
 
   // Datos de estadísticas
+  private speciesData = signal<Map<string, number>>(new Map<string, number>());
+  private typesData = signal<Map<string, number>>(new Map<string, number>());
   private speciesCountData = signal<SpeciesCount[]>([]);
   private typeCountData = signal<TypeCount[]>([]);
   private loading = signal<boolean>(false);
 
   // Propiedades computadas para los componentes
-  speciesCount = computed(() => this.speciesCountData());
-  typeCount = computed(() => this.typeCountData());
-  totalSpecies = computed(() => this.speciesCount().length);
-  totalTypes = computed(() => this.typeCount().length);
+  speciesCount = computed(() => this.speciesData());
+  typeCount = computed(() => this.typesData());
+  totalSpecies = computed(() => this.speciesCount().size);
+  totalTypes = computed(() => this.typeCount().size);
   isLoading = computed(() => this.loading());
 
   // Signal para los personajes de la página actual
@@ -35,7 +37,6 @@ export class TabStatisticsService {
     effect(() => {
       const characters = this.characterService.charactersArray();
       const currentPage = this.characterService.currentPage();
-      const pageSize = this.characterService.currentPageSize();
       const nameTerm = this.characterService.nameTerm();
       const statusTerm = this.characterService.statusTerm();
       // Actualizamos los personajes de la página actual
@@ -47,31 +48,22 @@ export class TabStatisticsService {
     this.fetchStatistics();
   }
   calculateStatistics() {
-    // Si no hay personajes, no hacemos nada
     const characters = this.currentCharacters();
     if (!characters || characters.length === 0) {
       return;
     }
-    // Calcular estadísticas de especies
     const speciesMap = new Map<string, number>();
-    characters.forEach(character => {
-      const species = character.species || 'Unknown';
-      speciesMap.set(species, (speciesMap.get(species) || 0) + 1);
-    });
-    // Calcular estadísticas de tipos
     const typeMap = new Map<string, number>();
-    characters.forEach(character => {
-      const type = character.type || 'Unknown';
-      typeMap.set(type, (typeMap.get(type) || 0) + 1);
+
+    characters.forEach(({ species = 'Unknown', type = 'Unknown' }) => {
+        speciesMap.set(species, (speciesMap.get(species) || 0) + 1);
+        typeMap.set(type, (typeMap.get(type) || 0) + 1);
     });
-    // Actualizar los datos
-    this.speciesCountData.set(
-      Array.from(speciesMap).map(([species, count]) => ({ species, count }))
-    );
-    this.typeCountData.set(
-      Array.from(typeMap).map(([type, count]) => ({ type, count }))
-    );
+
+    this.speciesData.set(speciesMap);
+    this.typesData.set(typeMap);
   }
+
   fetchStatistics() {
     // Si ya tenemos personajes en el servicio principal, usamos esos
     const characters = this.characterService.charactersArray();
@@ -87,7 +79,6 @@ export class TabStatisticsService {
     const nameTerm = this.characterService.nameTerm();
     const statusTerm = this.characterService.statusTerm();
     const currentPage = this.characterService.currentPage();
-    const pageSize = this.characterService.currentPageSize();
     // Construir las variables para la consulta GraphQL
     const variables: GraphQLVariables = {
       page: currentPage,
@@ -99,7 +90,7 @@ export class TabStatisticsService {
     if (statusTerm) {
       variables.filter.status = statusTerm;
     }
-    
+
     // Consulta GraphQL
     const query = `
       query GetCharactersStatistics($page: Int, $filter: FilterCharacter) {
@@ -127,12 +118,7 @@ export class TabStatisticsService {
     }).subscribe({
       next: (response: GraphQLResponse) => {
         const allCharacters = response?.data?.characters?.results || [];
-        // Aplicar el tamaño de página actual (igual que en la UI)
-        // Si la API devuelve 20 pero la UI muestra 5, tomamos solo los primeros 5
-        const visibleCharacters = allCharacters.slice(0, pageSize);
-        // Actualizar los personajes actuales
-        this.currentCharacters.set(visibleCharacters);
-        // Calcular estadísticas con los personajes visibles
+        this.currentCharacters.set(allCharacters);
         this.calculateStatistics();
         this.loading.set(false);
       },

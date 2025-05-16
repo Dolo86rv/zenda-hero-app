@@ -4,7 +4,7 @@ import { MatPaginator, MatPaginatorModule, PageEvent} from '@angular/material/pa
 import { CharacterItem } from '@character/models/character.model';
 import { CharacterDetailComponent } from "../character-detail/character-detail.component";
 import { CharacterService } from '@character/services/character.service';
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { forkJoin, map, of, switchMap } from 'rxjs';
 import { CharacterDetails } from '@character/models/character-response.model';
 import { DatePipe } from '@angular/common';
 import { CharacterSearchComponent } from "../character-search/character-search.component";
@@ -27,9 +27,9 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
   characterService = inject(CharacterService);
   @Input() dataSource!: MatTableDataSource<CharacterItem>
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   itemCharacter = signal<CharacterDetails | null>(null);
   totalItems: number = 0;
-  currentPageSize: number = 20;
   displayedColumns: string[] = [
     'name',
     'status',
@@ -56,27 +56,13 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
         this.paginator.pageIndex = currentPage - 1;
       }
     });
-    //Usar effect para manejar cambios en el tamaño de página
-    effect(() => {
-      this.currentPageSize = this.characterService.currentPageSize();
-      if (this.paginator && this.paginator.pageSize !== this.currentPageSize) {
-        this.paginator.pageSize = this.currentPageSize;
-      }
-    });
   }
   ngOnInit(): void {
     // Inicialización ya manejada por los effects
   }
   handlePageEvent(event: PageEvent): void {
     const page = event.pageIndex + 1;
-    const pageSize = event.pageSize;
-    // Si cambió el tamaño de la página
-    if (pageSize !== this.currentPageSize) {
-      this.characterService.setPageSize(pageSize);
-    } else {
-      // Si solo cambió el número de página
-      this.characterService.goToPage(page, pageSize);
-    }
+    this.characterService.goToPage(page);
   }
   selectCharacter(character: CharacterItem): void{
     const originUrl = character.origin?.url ? this.characterService.getLocation(character.origin.url) : of(null);
@@ -111,12 +97,12 @@ export class CharacterTableComponent implements AfterViewInit, OnInit {
       this.store.dispatch(setCurrentCharacter({ character: resp.character }));
     })
   }
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     // Configurar el paginador con valores iniciales
     if (this.paginator) {
       this.paginator.length = this.totalItems;
-      this.paginator.pageSize = this.currentPageSize;
     }
   }
 }

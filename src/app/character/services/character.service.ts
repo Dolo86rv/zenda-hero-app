@@ -42,7 +42,6 @@ export class CharacterService {
   }
   charactersArray = computed(() => this.characters());
   currentPage = computed(() => this.charactersPage());
-  currentPageSize = computed(() => this.pageSize());
   totalPagesValue = computed(() => this.totalPages());
   totalCharactersValue = computed(() => this.totalCharacters());
 
@@ -53,10 +52,9 @@ export class CharacterService {
     return `?name=${this.nameTerm()}&status=${this.statusTerm()}`;
   })
 
-  getCharacters(page: number = 1, size: number = 20): void {
+  getCharacters(page: number = 1): void {
     this.charactersLoading.set(true);
     this.charactersPage.set(page);
-    this.pageSize.set(size);
 
     this.http.get<CharacterResponse>(`${API_URL}/character?page=${page}`).pipe(
       tap(resp => {
@@ -72,37 +70,29 @@ export class CharacterService {
     ).subscribe((resp) => {
       let items = CharacterMapper.mapCharacterItems(resp.results);
       // Aplicamos el tamaño de página localmente si es diferente de 20
-      if (size !== 20) {
-        items = items.slice(0, size);
-      }
+
       this.characters.set(items);
       this.charactersLoading.set(false);
-      console.log({items, pageInfo: resp.info, pageSize: size});
     });
   }
   nextPage(): void {
     const currentPage = this.charactersPage();
     if (currentPage < this.totalPages()) {
-      this.getCharacters(currentPage + 1, this.pageSize());
+      this.getCharacters(currentPage + 1);
     }
   }
   prevPage(): void {
     const currentPage = this.charactersPage();
     if (currentPage > 1) {
-      this.getCharacters(currentPage - 1, this.pageSize());
+      this.getCharacters(currentPage - 1);
     }
   }
-  goToPage(page: number, size: number = this.pageSize()): void {
+  goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages()) {
-      this.getCharacters(page, size);
+      this.getCharacters(page);
     }
   }
-  setPageSize(size: number): void {
-    if (size > 0) {
-      this.pageSize.set(size);
-      this.getCharacters(this.charactersPage(), size);
-    }
-  }
+
   getEpisode(baseUrl: string): Observable<Episode> {
     if (!baseUrl) return of({} as Episode);
     return this.http.get<Episode>(baseUrl).pipe(
@@ -129,7 +119,7 @@ export class CharacterService {
 
     // Si query está vacío, simplemente recuperamos todos los personajes
     if (!query || query === '') {
-      this.getCharacters(1, this.pageSize());
+      this.getCharacters(1);
       return;
     }
     this.http.get<CharacterResponse>(`${API_URL}/character${query}`).pipe(
@@ -161,9 +151,6 @@ export class CharacterService {
   }
 
   applyFilter() {
-    // Pequeña pausa para evitar múltiples peticiones mientras se escribe
-    setTimeout(() => {
-      this.getCharacterByQuery(this.query());
-    }, 300);
+    this.getCharacterByQuery(this.query());
   }
 }

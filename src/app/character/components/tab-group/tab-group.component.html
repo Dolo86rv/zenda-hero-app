@@ -8,9 +8,9 @@
       <ng-container *ngIf="!isLoading()">
         <div class="font-bold text-lg mb-2">Total de especies diferentes: {{ totalSpecies() }}</div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div *ngFor="let item of speciesCount()" class="bg-white p-3 rounded shadow flex justify-between items-center">
-            <span>{{ item.species }}</span>
-            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">{{ item.count }}</span>
+          <div *ngFor="let item of speciesCount() | keyvalue" class="bg-white p-3 rounded shadow flex justify-between items-center">
+            <span>{{ item.key }}</span>
+            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-semibold">{{ item.value }}</span>
           </div>
         </div>
       </ng-container>
@@ -25,9 +25,9 @@
       <ng-container *ngIf="!isLoading()">
         <div class="font-bold text-lg mb-2">Total de tipos diferentes: {{ totalTypes() }}</div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div *ngFor="let item of typeCount()" class="bg-white p-3 rounded shadow flex justify-between items-center">
-            <span>{{ item.type || 'Sin tipo' }}</span>
-            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">{{ item.count }}</span>
+          <div *ngFor="let item of typeCount() | keyvalue" class="bg-white p-3 rounded shadow flex justify-between items-center">
+            <span>{{ item.key || 'Sin tipo' }}</span>
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">{{ item.value }}</span>
           </div>
         </div>
       </ng-container>

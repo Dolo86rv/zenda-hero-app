@@ -6,9 +6,9 @@
   <div class="flex items-center mr-16">
     <mat-icon class="">favorite</mat-icon>
     <span class="text-white text-xl font-medium ml-2"> Favorite: </span>
-    @if (isFavorite()) {
+    @for (item of listFavorite(); track item.id){
       <div class="flex flex-col gap-2">
-        <span class="text-amber-400 text-xl font-medium ml-3"> {{ selectedCharacter()?.name }} </span>
+        <span class="text-amber-400 text-xl font-medium ml-3"> {{ item.name }} </span>
       </div>
     }
   </div>

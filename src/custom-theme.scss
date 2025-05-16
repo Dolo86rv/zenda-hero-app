@@ -13,4 +13,13 @@ html {
     typography: Roboto,
     density: 0,
   ));
+
+  @include mat.select-overrides((
+    panel-background-color: orange,
+    enabled-trigger-text-color: red,
+  ));
+
+  @include mat.select-overrides((
+    trigger-text-font: rgb(38, 0, 255),
+  ))
 }
