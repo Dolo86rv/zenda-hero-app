@@ -33,27 +33,16 @@
             <span class="ml-2 text-xs">{{ character()?.character?.gender }}</span>
           </div>
         </div>
-        @if (isFavorite()) {
-          <div class="mt-24 inline-flex items-center justify-center text-md h-12 px-3 py-5 bg-amber-100 space-x-2 rounded-2xl font-medium shadow-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors ease-in-out duration-150">
-            <mat-icon class="">favorite</mat-icon>
-            <button
-              type="button"
-              (click)="toggledFavorites(character())"
-            >
-              <span> Favorite</span>
-            </button>
-          </div>
-        }@else {
-          <button
-            mat-fab
-            extended
-            class="mt-24 h-2 w-2"
-            (click)="toggledFavorites(character())"
-          >
-            <mat-icon class="">favorite</mat-icon>
-            <span>Favorite</span>
-          </button>
-        }
+
+        <button
+          mat-fab extended
+          (click)="toggledFavorites(character())"
+          class="mt-12"
+        >
+          <mat-icon>favorite</mat-icon>
+          <span>Favorite</span>
+        </button>
+
       </div>
 
       <!-- Información Detallada -->

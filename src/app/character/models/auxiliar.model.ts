@@ -42,3 +42,16 @@ export interface Status {
   value: string;
   viewValue: string;
 }
+
+export enum Color {
+  red,
+  black,
+  green,
+  blue,
+}
+
+export const ColorMap = {
+  red: 'red',
+  green: 'green',
+  black: 'gray',
+}

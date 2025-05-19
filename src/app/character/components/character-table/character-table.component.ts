@@ -11,14 +11,17 @@ import { CharacterSearchComponent } from "../character-search/character-search.c
 import { Store } from '@ngrx/store';
 import { HighlightDirective } from '@character/directives/highlight.directive';
 import { setDetail } from 'src/app/store/character/character.actions';
+import { TextColorPipe } from '@character/pipes/text-color.pipe';
 @Component({
   selector: 'character-table',
   imports: [
-    MatTableModule,    MatPaginatorModule,
+    MatTableModule,
+    MatPaginatorModule,
     CharacterDetailComponent,
     DatePipe,
     CharacterSearchComponent,
-    HighlightDirective
+    HighlightDirective,
+    TextColorPipe
   ],
   templateUrl: './character-table.component.html',
   styles: `

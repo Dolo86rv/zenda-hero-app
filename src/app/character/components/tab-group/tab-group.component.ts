@@ -10,7 +10,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   templateUrl: './tab-group.component.html',
   styles:
   `
-    ::ng-deep .mat-tab-label.mat-tab-label-active {
+    .mat-tab-label.mat-tab-label-active {
       @apply bg-blue-500 text-white rounded-t-lg shadow;
     }
   `

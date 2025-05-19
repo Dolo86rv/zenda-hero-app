@@ -15,11 +15,28 @@ html {
   ));
 
   @include mat.select-overrides((
-    panel-background-color: orange,
-    enabled-trigger-text-color: red,
+    panel-background-color: rgb(241, 239, 239),
+    enabled-trigger-text-color: rgb(34, 33, 33),
+    disabled-trigger-text-color: rgb(170, 170, 170),
+    container-elevation-shadow: 0,
   ));
 
-  @include mat.select-overrides((
-    trigger-text-font: rgb(38, 0, 255),
-  ))
+  @include mat.tabs-overrides((
+    active-indicator-color: rgb(0, 26, 255),
+    divider-color: rgb(179, 188, 219),
+    background-color: rgb(255, 255, 255),
+  ));
+
+  @include mat.form-field-overrides((
+    filled-container-color: rgb(255, 255, 255),
+    filled-caret-color: rgb(0, 26, 255),
+    filled-disabled-label-text-color: rgb(170, 170, 170),
+  ));
+
+  @include mat.table-overrides((
+    background-color: rgb(252, 249, 245),
+    header-headline-color: rgb(24, 23, 23),
+  ));
+
+
 }

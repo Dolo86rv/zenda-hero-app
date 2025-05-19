@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule} from '@angular/material/input';
 import { MatFormFieldModule} from '@angular/material/form-field';
@@ -7,8 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule} from '@angular/forms';
 import { CharacterService } from '@character/services/character.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { CharacterFilterComponent } from "../character-filter/character-filter.component";
 import { debounceTime, distinctUntilChanged, filter, map, takeUntil } from 'rxjs';
 
 
@@ -34,6 +32,10 @@ interface Status {
     ReactiveFormsModule
 ],
   templateUrl: './character-search.component.html',
+  styles: `
+    ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex {
+      background-color:rgb(255, 255, 255); /* tu color deseado */
+  }`
 
 })
 export class CharacterSearchComponent implements OnInit {
@@ -67,8 +69,7 @@ export class CharacterSearchComponent implements OnInit {
 
   ngOnInit() {
     this.filterForm.valueChanges.pipe(
-        //takeUntilDestroyed(),
-        debounceTime(500), // Espera 300ms después de que el usuario deja de escribir
+        debounceTime(500),
         map(val => ({
           name: (val.name ?? '').trim().toLowerCase(),
           type: val.type ?? ''

@@ -12,13 +12,11 @@
       />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="">
+    <mat-form-field>
       <mat-label>Filter by Status</mat-label>
       <mat-select formControlName="type" panelClass="">
         @for (item of estadosFilter(); track item.value) {
-          <mat-option [value]="item.value">
-            {{item.viewValue}}
-          </mat-option>
+          <mat-option [value]="item.value">{{item.viewValue}}</mat-option>
         }
       </mat-select>
     </mat-form-field>
