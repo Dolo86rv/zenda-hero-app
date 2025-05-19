@@ -6,7 +6,7 @@ import { CharacterDetailComponent } from "../character-detail/character-detail.c
 import { CharacterService } from '@character/services/character.service';
 import { forkJoin, map, of, switchMap } from 'rxjs';
 import { CharacterDetails } from '@character/models/character-response.model';
-import { DatePipe } from '@angular/common';
+import { DatePipe, LowerCasePipe, UpperCasePipe } from '@angular/common';
 import { CharacterSearchComponent } from "../character-search/character-search.component";
 import { Store } from '@ngrx/store';
 import { HighlightDirective } from '@character/directives/highlight.directive';
@@ -21,7 +21,8 @@ import { TextColorPipe } from '@character/pipes/text-color.pipe';
     DatePipe,
     CharacterSearchComponent,
     HighlightDirective,
-    TextColorPipe
+    TextColorPipe,
+    UpperCasePipe
   ],
   templateUrl: './character-table.component.html',
   styles: `

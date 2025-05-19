@@ -56,7 +56,7 @@ export enum Species {
 export enum Status {
   Alive = "Alive",
   Dead = "Dead",
-  Unknown = "unknown",
+  Unknown = "Unknown",
 }
 
 export interface CharacterFilter {

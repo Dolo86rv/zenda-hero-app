@@ -22,7 +22,7 @@
         <!-- Status Column -->
         <ng-container matColumnDef="status">
           <th mat-header-cell *matHeaderCellDef> Status </th>
-          <td mat-cell *matCellDef="let element"><span class="bg-pink-200 rounded rounded-xl p-1"  [style.color]=" element.status | textColor">{{element.status}}</span></td>
+          <td mat-cell *matCellDef="let element"><span class="bg-pink-200 rounded rounded-xl p-1"  [style.color]=" element.status | textColor">{{element.status | uppercase }}</span></td>
         </ng-container>
 
         <!-- Species Column -->

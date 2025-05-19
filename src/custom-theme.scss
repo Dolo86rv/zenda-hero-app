@@ -16,21 +16,21 @@ html {
 
   @include mat.select-overrides((
     panel-background-color: rgb(241, 239, 239),
-    enabled-trigger-text-color: rgb(34, 33, 33),
+    enabled-trigger-text-color: rgb(8, 10, 165),
     disabled-trigger-text-color: rgb(170, 170, 170),
-    container-elevation-shadow: 0,
+    focused-arrow-color: rgb(0, 26, 255),
   ));
 
   @include mat.tabs-overrides((
     active-indicator-color: rgb(0, 26, 255),
     divider-color: rgb(179, 188, 219),
-    background-color: rgb(255, 255, 255),
+    active-focus-label-text-color: rgb(25, 44, 218),
   ));
 
   @include mat.form-field-overrides((
     filled-container-color: rgb(255, 255, 255),
-    filled-caret-color: rgb(0, 26, 255),
-    filled-disabled-label-text-color: rgb(170, 170, 170),
+    filled-caret-color: rgb(31, 30, 28),
+    filled-focus-active-indicator-color: rgb(38, 0, 255)
   ));
 
   @include mat.table-overrides((

@@ -14,7 +14,7 @@ export class TextColorPipe implements PipeTransform {
           return ColorMap.green;
         case 'Dead':
           return ColorMap.red;
-        case 'Unknown':
+        case 'unknown':
           return ColorMap.black;
         default:
           return ColorMap.black;
